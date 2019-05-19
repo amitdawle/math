@@ -5,7 +5,7 @@ class Polynomial(val coefficients: List<Double>) {
     override fun toString(): String {
         return coefficients.zip(0.until(coefficients.size))
                 .filter { p -> p.first != 0.0 }
-                .map { p -> p.first.toString() + if (p.second == 0) " " else "x^" + p.second.toString() }
+                .map { p -> p.first.toString() + if (p.second == 0) "" else "x^" + p.second.toString() }
                 .foldRight("") { x, t -> if (t == "") x else if (t.startsWith("-")) "$x $t" else "$x + $t" }
     }
 
@@ -47,35 +47,35 @@ fun main(args: Array<String>) {
             PI + PI/8, PI + PI/4 , PI + 3 * PI/ 8 , PI + PI/2, PI + 5 * PI/ 8, PI +  3 * PI/ 4, PI +  7 * PI/8, PI + PI)
     println(x)
     val points = x.map { xi -> Pair(xi , sin(xi)) }
-    val p = interPolatingPolynomial(points)
+    val p0 = interPolatingPolynomial(points)
+    println(p0)
+
+    val p = Polynomial(listOf(1.0, 0.0, -3.0))
+    println(p0)
+    println(p0.multiply(p0))
+    println(p0.multiply(p0).at(2.0))
+    println(interPolatingPolynomial(listOf(Pair(0.0,1.0), Pair(2.0, 5.0), Pair(4.0,17.0), Pair(7.0, 19.0))))
+
+    println(interPolatingPolynomial(listOf(Pair(-1.0,0.3678794), Pair(0.0, 1.0), Pair(1.0,2.718282))))
+    println(interPolatingPolynomial(listOf(Pair(0.0, 3.0))).at(1.0))
+
+    val points2 = (-10).until(10).map { xi -> Pair(xi.toDouble(), Math.exp(xi.toDouble())) }
+    val p2 = interPolatingPolynomial(points2)
     println(p)
+    val y = points.map { it.second }
+    println(y)
+    val calculatedY = points.map { it.first }.map { p.at(it) }
+    println(calculatedY)
+    print(y.zip(calculatedY).map { pair -> if ((pair.first - pair.second) < 0.00001) 0.0 else pair.first - pair.second })
 
-//    val p = Polynomial(listOf(1.0, 0.0, -3.0))
-//    println(p)
-//    println(p.multiply(p))
-//    println(p.multiply(p).at(2.0))
-//    println(interPolatingPolynomial(listOf(Pair(0.0,1.0), Pair(2.0, 5.0), Pair(4.0,17.0), Pair(7.0, 19.0))))
-//
-//    println(interPolatingPolynomial(listOf(Pair(-1.0,0.3678794), Pair(0.0, 1.0), Pair(1.0,2.718282))))
-//    println(interPolatingPolynomial(listOf(Pair(0.0, 3.0))).at(1.0))
-//
-//    val points = (-10).until(10).map { x -> Pair(x.toDouble(), Math.exp(x.toDouble())) }
-//    val p = interPolatingPolynomial(points)
-//    println(p)
-//    val y = points.map { it.second }
-//    println(y)
-//    val calculatedY = points.map { it.first }.map { p.at(it) }
-//    println(calculatedY)
-//    print(y.zip(calculatedY).map { pair -> if ((pair.first - pair.second) < 0.00001) 0.0 else pair.first - pair.second })
-
-//    println(p.multiply(Polynomial(listOf(-1.0))))
-//    println(p.add(p))
-    // println(p.add(p2))
-//        val p2 = Polynomial(listOf(1.0, 2.0, -3.0))
-//        println(p2)
-//        val p3 = Polynomial(listOf(1.0, 2.0, -3.0, 4.0, -5.0))
-//        println(p3)
-//        println(p2.add(p3))
+    println(p.multiply(Polynomial(listOf(-1.0))))
+    println(p.add(p))
+     println(p.add(p2))
+        val p3 = Polynomial(listOf(1.0, 2.0, -3.0))
+        println(p3)
+        val p4 = Polynomial(listOf(1.0, 2.0, -3.0, 4.0, -5.0))
+        println(p4)
+        println(p2.add(p4))
 }
 
 fun interPolatingPolynomial(points: List<Pair<Double, Double>>): Polynomial {
