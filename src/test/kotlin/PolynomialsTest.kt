@@ -20,9 +20,9 @@ class PolynomialsTest : Spek({
                 Assert.assertEquals(listOf(0.0, 1.0), p.coefficients)
             }
         }
-        given("Given points on sine curve the interpolated polynomial for different x produces approximately " +
-                "same result as sin(x) within a tolerance of 0.001") {
-            it("returns polynomial (curve) with degree 2") {
+        given("An interpolated polynomial for points on sine curve") {
+            it(" produces approximately same result as sin(x) within a tolerance of 0.001 for different x" +
+                    " between 0.0 and 2PI") {
 
                 val x = listOf(0.0, PI / 8, PI / 4, 3 * PI / 8, PI / 2, 5 * PI / 8, 3 * PI / 4, 7 * PI / 8, PI,
                         PI + PI / 8, PI + PI / 4, PI + 3 * PI / 8, PI + PI / 2, PI + 5 * PI / 8, PI + 3 * PI / 4, PI + 7 * PI / 8, PI + PI)
