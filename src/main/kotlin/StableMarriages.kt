@@ -1,4 +1,4 @@
-val males = linkedMapOf(
+val femalesPreferredByMales = linkedMapOf(
         "abe" to mutableListOf("abi", "eve", "cath", "ivy", "jan", "dee", "fay", "bea", "hope", "gay"),
         "bob" to mutableListOf("cath", "hope", "abi", "dee", "eve", "fay", "bea", "jan", "ivy", "gay"),
         "col" to mutableListOf("hope", "eve", "abi", "dee", "bea", "fay", "ivy", "gay", "cath", "jan"),
@@ -10,7 +10,7 @@ val males = linkedMapOf(
         "ian" to mutableListOf("hope", "cath", "dee", "gay", "bea", "abi", "fay", "ivy", "jan", "eve"),
         "jon" to mutableListOf("abi", "fay", "jan", "gay", "eve", "bea", "dee", "cath", "ivy", "hope"))
 
-val females = linkedMapOf(
+val malesPreferredByFemales = linkedMapOf(
         "abi" to listOf("bob", "fred", "jon", "gav", "ian", "abe", "dan", "ed", "col", "hal"),
         "bea" to listOf("bob", "abe", "col", "fred", "gav", "dan", "ian", "ed", "jon", "hal"),
         "cath" to listOf("fred", "bob", "ed", "gav", "hal", "col", "ian", "abe", "dan", "jon"),
@@ -29,34 +29,35 @@ fun main(args: Array<String>) {
 
 
 fun stableMarriagePairs(): Map<String, String> {
-    val suitors = males.keys.toList()
+    val suitors = femalesPreferredByMales.keys.toList()
     val pairs: Map<String, String> = mapOf()
     return findPairs(suitors, pairs)
 }
 
-fun findPairs(suitors: List<String>?, engaged: Map<String, String>): Map<String, String> {
-    suitors?.let {
-        when (suitors.isEmpty()) {
+fun findPairs(males: List<String>?, engaged: Map<String, String>): Map<String, String> {
+    males?.let {
+        when (males.isEmpty()) {
             true -> return engaged
             false -> {
-                val suitor = suitors[0]
-                val suitees = males[suitor]
-                val suitee = suitees?.find { suitee ->
-                    println("? $suitor is proposing to $suitee")
-                    isPreferred(suitee, suitor, engaged[suitee]) }
-                println("+ $suitee has accepted $suitor's proposal")
-                val remainingSuitors = if (engaged.contains(suitee)) {
-                    val oldSuitor = engaged[suitee]
+                val male = males[0]
+                val females = femalesPreferredByMales[male]
+                val female = females?.find { female ->
+                    println("? $male is proposing to $female")
+                    isPreferred(female, male, engaged[female]) }
+                println("+ $female has accepted $male's proposal")
+                
+                val remainingSuitors = if (engaged.contains(female)) {
+                    val oldSuitor = engaged[female]
                     oldSuitor?.let {
-                        println("- $suitee and $oldSuitor are no longer engaged")
-                        suitors.drop(1).plus(oldSuitor) }
+                        println("- $female and $oldSuitor are no longer engaged")
+                        males.drop(1).plus(oldSuitor) }
                 } else {
-                    suitors.drop(1)
+                    males.drop(1)
                 }
 
-                suitee?.let {
-                    println("* $suitee and $suitor are now engaged")
-                    return findPairs(remainingSuitors, engaged.plus(Pair(suitee, suitor)))
+                female?.let {
+                    println("* $female and $male are now engaged")
+                    return findPairs(remainingSuitors, engaged.plus(Pair(female, male)))
                 }
             }
         }
@@ -65,13 +66,13 @@ fun findPairs(suitors: List<String>?, engaged: Map<String, String>): Map<String,
 }
 
 
-fun isPreferred(suitee: String, suitor: String, currentSuitor: String?): Boolean {
-    when (currentSuitor) {
+fun isPreferred(female: String, suitor: String, engagedTo: String?): Boolean {
+    when (engagedTo) {
         null -> return true
         else -> {
-            val preferred = females[suitee]
-            preferred?.let { p ->
-                return p.indexOf(suitor) < p.indexOf(currentSuitor)
+            val preferredMales = malesPreferredByFemales[female]
+            preferredMales?.let { p ->
+                return p.indexOf(suitor) < p.indexOf(engagedTo)
             }
             return false
         }
